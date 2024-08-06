@@ -23,7 +23,7 @@ func InitDB() *Repository {
 }
 
 func (repo *Repository) AutoMigrate() {
-	err := repo.DB.AutoMigrate(&models.User{}, &models.Post{}, &models.Command{}, &models.Category{}, &models.Category_Post_Mapping{})
+	err := repo.DB.AutoMigrate(&models.User{}, &models.Post{}, &models.Command{}, &models.Category{})
 	if err != nil {
 		panic(err)
 	}

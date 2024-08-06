@@ -4,60 +4,52 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	User_id    uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"user_id"`
-	Username   string    `gorm:"unique" json:"username" validate:"required" `
-	Email      string    `gorm:"unique" json:"email" validate:"required" `
-	Password   string    `json:"password" validate:"required"`
-	Is_Admin   bool      `gorm:"default:false" json:"is_admin" validate:"required"`
-	Created_at time.Time
-	Updated_at time.Time
-	Deleted_at gorm.DeletedAt `gorm:"index"`
+	User_id    uuid.UUID      `gorm:"column:user_id; primaryKey;type:uuid;default:uuid_generate_v4()" json:"user_id" validate:"omitempty,uuid4"`
+	Username   string         `gorm:"column:username; unique" json:"username" validate:"required" `
+	Email      string         `gorm:"column:email; unique" json:"email" validate:"required" `
+	Password   string         `gorm:"column:password" json:"-" validate:"required"`
+	Is_Admin   bool           `gorm:"column:is_admin; default:false" json:"is_admin" validate:"required"`
+	Created_at time.Time      `gorm:"column:created_at" json:"-"`
+	Updated_at time.Time      `gorm:"column:updated_at" json:"-"`
+	Deleted_at gorm.DeletedAt `gorm:"column:deleted_at; index" json:"-"`
 }
 
 type Post struct {
-	Post_id    uuid.UUID `json:"post_id" gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	Title      string    `json:"title"  validate:"required"`
-	Body       string    `json:"body"  validate:"required"`
-	Category   string    `json:"category"  validate:"required"`
-	User_id    uuid.UUID `gorm:"foreignKey" json:"user_id"  validate:"required"`
-	User       User      `gorm:"references:User_id;"  validate:"required"`
-	Created_at time.Time
-	Updated_at time.Time
-	Deleted_at gorm.DeletedAt `gorm:"index"`
+	Post_id    uuid.UUID      `gorm:"column:post_id;primaryKey;type:uuid;default:uuid_generate_v4()" json:"post_id" `
+	Title      string         `gorm:"column:title" json:"title"  validate:"required"`
+	Body       string         `gorm:"column:body" json:"body"  validate:"required"`
+	User_id    uuid.UUID      `gorm:"column:user_id;foreignKey" json:"user_id" validate:"omitempty,uuid4"`
+	User       User           `gorm:"references:User_id;" json:"-"  validate:"omitempty,uuid4"`
+	Categories pq.StringArray `gorm:"column:categories; type:text[]" json:"categories"`
+	Created_at time.Time      `gorm:"column:created_at" json:"-"`
+	Updated_at time.Time      `gorm:"column:updated_at" json:"-"`
+	Deleted_at gorm.DeletedAt `gorm:"column:deleted_at; index" json:"-"`
 }
 
 type Command struct {
-	Command_id uuid.UUID `json:"command_id" gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	Content    string    `json:"content" validate:"required"`
-	User_id    uuid.UUID `gorm:"foreignKey" json:"user_id" validate:"required"`
-	User       User      `gorm:"references:User_id"`
-	Post_id    uuid.UUID `gorm:"foreignKey" json:"post_id" validate:"required"`
-	Post       Post      `gorm:"references:Post_id"`
-	Created_at time.Time
-	Updated_at time.Time
-	Deleted_at gorm.DeletedAt `gorm:"index"`
+	Command_id uuid.UUID      `gorm:"column:command_id;primaryKey;type:uuid;default:uuid_generate_v4()" json:"command_id"`
+	Content    string         `gorm:"column:content" json:"content" validate:"required"`
+	User_id    uuid.UUID      `gorm:"column:user_id;foreignKey" json:"user_id"`
+	User       User           `gorm:"references:User_id" json:"-" validate:"omitempty"`
+	Post_id    uuid.UUID      `gorm:"column:post_id;foreignKey" json:"post_id"`
+	Post       Post           `gorm:"references:Post_id" json:"-" validate:"omitempty"`
+	Created_at time.Time      `gorm:"column:created_at" json:"-"`
+	Updated_at time.Time      `gorm:"column:updated_at" json:"-"`
+	Deleted_at gorm.DeletedAt `gorm:"column:deleted_at; index" json:"-"`
 }
 
 type Category struct {
-	Category_id   uuid.UUID `json:"category_id" gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	Category_Name string    `json:"category_name" validate:"required"`
-	Description   string    `json:"description"  validate:"required"`
-	Created_at    time.Time
-	Updated_at    time.Time
-	Deleted_at    gorm.DeletedAt `gorm:"index"`
-}
-
-type Category_Post_Mapping struct {
-	Id          uuid.UUID `json:"id" gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	Post_id     uuid.UUID `json:"post_id" validate:"required"`
-	Category_id uuid.UUID `json:"category_id" validate:"required"`
-	Created_at  time.Time
-	Updated_at  time.Time
-	Deleted_at  gorm.DeletedAt `gorm:"index"`
+	Category_id   uuid.UUID      `gorm:"column:category_id;primaryKey;type:uuid;default:uuid_generate_v4()" json:"category_id"`
+	Category_Name string         `gorm:"category_name" json:"category_name" validate:"required"`
+	Description   string         `gorm:"description" json:"description"  validate:"required"`
+	Created_at    time.Time      `gorm:"column:created_at" json:"-"`
+	Updated_at    time.Time      `gorm:"column:updated_at" json:"-"`
+	Deleted_at    gorm.DeletedAt `gorm:"column:deleted_at; index" json:"-"`
 }
 
 type Login struct {

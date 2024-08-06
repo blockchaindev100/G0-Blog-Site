@@ -44,7 +44,7 @@ func (h *Handlers) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return errors.New("authentication failed")
 	}
-	c.Response().Header.Add("Authentication", token)
+	c.Response().Header.Add("Authorization", token)
 	return c.JSON(fiber.Map{
 		"message": "login successful",
 	})
