@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	logger "github.com/blockchaindev100/Go-Blog-Site/logger"
 	"github.com/blockchaindev100/Go-Blog-Site/models"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -17,6 +18,7 @@ func CreateToken(user *models.User) (string, error) {
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {
+		logger.Logging().Error(err)
 		return "", err
 	}
 	return tokenString, nil
@@ -27,6 +29,7 @@ func VerifyToken(tokenString string) (bool, string, error) {
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
 	if err != nil {
+		logger.Logging().Error(err)
 		return false, "", err
 	}
 	is_admin := false
@@ -43,6 +46,7 @@ func VerifyToken(tokenString string) (bool, string, error) {
 		}
 	}
 	if !token.Valid {
+		logger.Logging().Error(errors.New("invalid token"))
 		return false, user_id, errors.New("invalid token")
 	}
 	return is_admin, user_id, nil

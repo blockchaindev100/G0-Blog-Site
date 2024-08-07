@@ -1,0 +1,1 @@
+{"file":"/home/m011/santhosh/GO/Go-Blog-Site/middleware/auth.go:14","func":"github.com/blockchaindev100/Go-Blog-Site/middleware.(*Middleware).UserAuth","level":"error","msg":"redis: nil","time":"2024-08-07T17:32:11+05:30"}
