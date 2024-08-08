@@ -15,7 +15,7 @@ func InitRouter(app *fiber.App, db repository.Database, logger *logrus.Logger) {
 	app.Post("/login", handler.Login)
 	blog := app.Group("/blog", middleware.UserAuth)
 	{
-		blog.Get("/", handler.GetPosts)
+		blog.Get("/", handler.GetPosts) 
 		blog.Use(middleware.AdminAuth)
 		blog.Post("/", handler.CreatePost)
 		blog.Put("/:id", handler.UpdatePost)
@@ -33,6 +33,7 @@ func InitRouter(app *fiber.App, db repository.Database, logger *logrus.Logger) {
 	{
 		command.Get("/:id", handler.GetCommandsByPostId)
 		command.Post("/:id", handler.AddCommand)
+		command.Put("/:id", handler.UpdateCommand)
 		command.Delete("/:id", handler.DeleteCommand)
 	}
 }

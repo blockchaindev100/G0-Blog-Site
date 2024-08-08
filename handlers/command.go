@@ -28,6 +28,23 @@ func (h *Handlers) AddCommand(c *fiber.Ctx) error {
 	})
 }
 
+func (h *Handlers) UpdateCommand(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user_id := c.Get("user_id")
+	var command models.Command
+	if err := c.BodyParser(&command); err != nil {
+		return errors.New("parsing failed")
+	}
+	err := h.Repo.UpdateCommand(id, user_id, command)
+	if err != nil {
+		h.Logger.Error(err)
+		return errors.New("updation failed")
+	}
+	return c.JSON(fiber.Map{
+		"message": "updated successful",
+	})
+}
+
 func (h *Handlers) DeleteCommand(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.Repo.DeleteCommand(id); err != nil {

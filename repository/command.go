@@ -8,9 +8,19 @@ import (
 )
 
 type Command interface {
+	GetCommandById(string) (models.Command, error)
 	AddCommand(*models.Command, string, string) error
 	DeleteCommand(string) error
 	GetCommandsByPostId(string) ([]models.Command, error)
+	UpdateCommand(string, string, models.Command) error
+}
+
+func (repo *Repository) GetCommandById(id string) (models.Command, error) {
+	var command models.Command
+	if err := repo.DB.First(&command, "command_id=?", id).Error; err != nil {
+		return command, err
+	}
+	return command, nil
 }
 
 func (repo *Repository) AddCommand(command *models.Command, post_id string, user_id string) error {
@@ -35,6 +45,24 @@ func (repo *Repository) AddCommand(command *models.Command, post_id string, user
 	if err := repo.DB.Create(&command).Error; err != nil {
 		repo.Logger.Error(err)
 		return errors.New("command creation failed")
+	}
+	return nil
+}
+
+func (repo *Repository) UpdateCommand(id string, user_id string, command models.Command) error {
+	exist_command, err := repo.GetCommandById(id)
+	if err != nil {
+		repo.Logger.Error(err)
+		return err
+	}
+	if exist_command.User_id.String() != user_id {
+		repo.Logger.Error(err)
+		return errors.New("invalid user")
+	}
+	exist_command.Content = command.Content
+	if err := repo.DB.Save(&exist_command).Error; err != nil {
+		repo.Logger.Error(err)
+		return err
 	}
 	return nil
 }
