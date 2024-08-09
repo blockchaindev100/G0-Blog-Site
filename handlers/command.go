@@ -33,6 +33,7 @@ func (h *Handlers) UpdateCommand(c *fiber.Ctx) error {
 	user_id := c.Get("user_id")
 	var command models.Command
 	if err := c.BodyParser(&command); err != nil {
+		h.Logger.Error(err)
 		return errors.New("parsing failed")
 	}
 	err := h.Repo.UpdateCommand(id, user_id, command)

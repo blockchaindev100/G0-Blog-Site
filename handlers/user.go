@@ -8,6 +8,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @Summary User SignUp
+// @Schemes
+// @Description Create a user account
+// @Tags signup
+// @Accept json User
+// @Produce json
+// @Success 200 {json} Response
+// @Router /signup [post]
 func (h *Handlers) Signup(c *fiber.Ctx) error {
 	var user models.User
 	if err := c.BodyParser(&user); err != nil {

@@ -13,11 +13,13 @@ type Command interface {
 	DeleteCommand(string) error
 	GetCommandsByPostId(string) ([]models.Command, error)
 	UpdateCommand(string, string, models.Command) error
+	TotalCommands() (int64, error)
 }
 
 func (repo *Repository) GetCommandById(id string) (models.Command, error) {
 	var command models.Command
 	if err := repo.DB.First(&command, "command_id=?", id).Error; err != nil {
+		repo.Logger.Error(err)
 		return command, err
 	}
 	return command, nil
@@ -82,4 +84,13 @@ func (repo *Repository) GetCommandsByPostId(id string) ([]models.Command, error)
 		return nil, err
 	}
 	return commands, nil
+}
+
+func (repo *Repository) TotalCommands() (int64, error) {
+	var count int64
+	if err := repo.DB.Find(&[]models.Command{}).Count(&count).Error; err != nil {
+		repo.Logger.Error(err)
+		return count, err
+	}
+	return count, nil
 }

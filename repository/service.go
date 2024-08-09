@@ -17,6 +17,6 @@ type Database interface {
 	Category
 }
 
-func AquireDatabase(db *gorm.DB) Database {
-	return &Repository{DB: db}
+func AquireDatabase(db *gorm.DB, logger *logrus.Logger) Database {
+	return &Repository{DB: db, Logger: logger}
 }
