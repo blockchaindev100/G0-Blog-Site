@@ -7,6 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @Summary Get Posts
+// @Schemes http
+// @Description Get all the posts in the blog site
+// @Tags Posts
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} []models.Post
+// @Router /blog [get]
 func (h *Handlers) GetPosts(c *fiber.Ctx) error {
 	posts, err := h.Repo.GetPosts()
 	if err != nil {
@@ -35,6 +44,16 @@ func (h *Handlers) GetPosts(c *fiber.Ctx) error {
 	return c.JSON(posts)
 }
 
+// @Summary Create Posts
+// @Schemes http
+// @Description Create post in the blog site
+// @Tags Posts
+// @Accept json
+// @Produce json
+// @Param user body models.Post true "Blog details"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.Response
+// @Router /blog [post]
 func (h *Handlers) CreatePost(c *fiber.Ctx) error {
 	var post models.Post
 	id := c.Get("user_id")
@@ -55,6 +74,17 @@ func (h *Handlers) CreatePost(c *fiber.Ctx) error {
 	})
 }
 
+// @Summary Update Posts
+// @Schemes http
+// @Description Update the post in the blog site
+// @Tags Posts
+// @Accept json
+// @Produce json
+// @Param id path string true "Post ID"
+// @Param user body models.Post true "Blog details"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.Response
+// @Router /blog [put]
 func (h *Handlers) UpdatePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var post models.Post
@@ -75,6 +105,16 @@ func (h *Handlers) UpdatePost(c *fiber.Ctx) error {
 	})
 }
 
+// @Summary Delete Posts
+// @Schemes http
+// @Description Delete the post in the blog site
+// @Tags Posts
+// @Accept json
+// @Produce json
+// @Param id path string true "Post ID"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.Response
+// @Router /blog [Delete]
 func (h *Handlers) DeletePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.Repo.DeletePost(id); err != nil {

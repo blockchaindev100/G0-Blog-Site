@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/blockchaindev100/Go-Blog-Site/config"
+	_ "github.com/blockchaindev100/Go-Blog-Site/docs"
 	logger "github.com/blockchaindev100/Go-Blog-Site/logger"
 	"github.com/blockchaindev100/Go-Blog-Site/repository"
 	routers "github.com/blockchaindev100/Go-Blog-Site/router"
@@ -14,6 +15,10 @@ import (
 // @title Swagger For BlogSite API
 // @version 1.0
 // @description This is a Blog site server. Here you can able to post blogs and read them.
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	service.RedisInit()
 	db := config.InitDB()

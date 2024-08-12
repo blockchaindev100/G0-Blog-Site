@@ -9,12 +9,13 @@ import (
 )
 
 // @Summary User SignUp
-// @Schemes
+// @Schemes http
 // @Description Create a user account
-// @Tags signup
-// @Accept json User
+// @Tags User
+// @Accept json
 // @Produce json
-// @Success 200 {json} Response
+// @Param user body models.User true "User details"
+// @Success 200 {object} models.Response
 // @Router /signup [post]
 func (h *Handlers) Signup(c *fiber.Ctx) error {
 	var user models.User
@@ -35,6 +36,15 @@ func (h *Handlers) Signup(c *fiber.Ctx) error {
 	})
 }
 
+// @Summary User Login
+// @Schemes http
+// @Description Login into the blog site
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param user body models.Login true "User details"
+// @Success 200 {object} models.Response
+// @Router /login [post]
 func (h *Handlers) Login(c *fiber.Ctx) error {
 	var login models.Login
 	if err := c.BodyParser(&login); err != nil {

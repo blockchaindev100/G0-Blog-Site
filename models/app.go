@@ -67,5 +67,5 @@ type Overview struct {
 }
 
 type Response struct {
-	message string
+	Message string `json:"message"`
 }

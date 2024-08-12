@@ -7,6 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @Summary Overview of the blog site
+// @Schemes http
+// @Description Get Overview of the blog site
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} models.Overview
+// @Router /admin/overview [get]
 func (h *Handlers) Overview(c *fiber.Ctx) error {
 	var overview models.Overview
 	if val, err := h.Repo.TotalPostCount(); err != nil {
