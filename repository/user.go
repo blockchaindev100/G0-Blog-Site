@@ -16,12 +16,14 @@ type User interface {
 func (repo *Repository) GetUserById(id string) (models.User, error) {
 	var user models.User
 	if err := repo.DB.First(&user, "user_id=?", id).Error; err != nil {
+		repo.Logger.Error(err)
 		return user, err
 	}
 	return user, nil
 }
 
 func (repo *Repository) CreateUser(user *models.User) error {
+	user.Created_at = time.Now()
 	hashedPassword, err := service.HashPassword(user.Password)
 	if err != nil {
 		repo.Logger.Error(err)

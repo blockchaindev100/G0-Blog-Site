@@ -1,0 +1,450 @@
+definitions:
+  models.Category:
+    properties:
+      category_id:
+        type: string
+      category_name:
+        type: string
+      description:
+        type: string
+    required:
+    - category_name
+    - description
+    type: object
+  models.Command:
+    properties:
+      command_id:
+        type: string
+      content:
+        type: string
+      post_id:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    required:
+    - content
+    type: object
+  models.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.Overview:
+    properties:
+      first_blog:
+        type: string
+      total_commands:
+        type: integer
+      total_post:
+        type: integer
+    type: object
+  models.Post:
+    properties:
+      body:
+        type: string
+      category:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      commands:
+        items:
+          $ref: '#/definitions/models.Command'
+        type: array
+      post_id:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: string
+    required:
+    - body
+    - title
+    type: object
+  models.Response:
+    properties:
+      message:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      is_admin:
+        type: boolean
+      password:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+info:
+  contact: {}
+  description: This is a Blog site server. Here you can able to post blogs and read
+    them.
+  title: Swagger For BlogSite API
+  version: "1.0"
+paths:
+  /admin/overview:
+    get:
+      consumes:
+      - application/json
+      description: Get Overview of the blog site
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Overview'
+      security:
+      - ApiKeyAuth: []
+      summary: Overview of the blog site
+      tags:
+      - Admin
+  /blog:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the post in the blog site
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Posts
+      tags:
+      - Posts
+    get:
+      consumes:
+      - application/json
+      description: Get all the posts in the blog site
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Post'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get Posts
+      tags:
+      - Posts
+    post:
+      consumes:
+      - application/json
+      description: Create post in the blog site
+      parameters:
+      - description: Blog details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Posts
+      tags:
+      - Posts
+    put:
+      consumes:
+      - application/json
+      description: Update the post in the blog site
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Blog details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Posts
+      tags:
+      - Posts
+  /category:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Category in the blog site
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Category
+      tags:
+      - Category
+    get:
+      consumes:
+      - application/json
+      description: Get Category from the blog site
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Category
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: Add Category in the blog site
+      parameters:
+      - description: Category details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Category
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: Update Category in the blog site
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Category
+      tags:
+      - Category
+  /command:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Command for the post in the blog site
+      parameters:
+      - description: Command ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Command
+      tags:
+      - Command
+    get:
+      consumes:
+      - application/json
+      description: Get Command for the post in the blog site
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Command'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get Command By Post ID
+      tags:
+      - Command
+    post:
+      consumes:
+      - application/json
+      description: Add Command for the post in the blog site
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Command details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Command'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Command
+      tags:
+      - Command
+    put:
+      consumes:
+      - application/json
+      description: Update Command for the post in the blog site
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Command details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Command'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Command
+      tags:
+      - Command
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login into the blog site
+      parameters:
+      - description: User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: User Login
+      tags:
+      - User
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Create a user account
+      parameters:
+      - description: User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: User SignUp
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

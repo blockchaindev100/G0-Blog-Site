@@ -48,7 +48,7 @@ type Command struct {
 
 type Category struct {
 	Category_id   uuid.UUID      `gorm:"column:category_id;primaryKey;type:uuid;default:uuid_generate_v4()" json:"category_id"`
-	Category_Name string         `gorm:"category_name" json:"category_name" validate:"required"`
+	Category_Name string         `gorm:"	category_name" json:"category_name" validate:"required"`
 	Description   string         `gorm:"description" json:"description"  validate:"required"`
 	Created_at    time.Time      `gorm:"column:created_at" json:"-"`
 	Updated_at    time.Time      `gorm:"column:updated_at" json:"-"`
@@ -58,4 +58,14 @@ type Category struct {
 type Login struct {
 	Email    string `validate:"required" json:"email"`
 	Password string `validate:"required" json:"password"`
+}
+
+type Overview struct {
+	Total_Posts    int64     `json:"total_post"`
+	Total_Commands int64     `json:"total_commands"`
+	First_Blog     time.Time `json:"first_blog"`
+}
+
+type Response struct {
+	Message string `json:"message"`
 }

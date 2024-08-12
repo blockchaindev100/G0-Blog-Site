@@ -22,7 +22,7 @@ func Logging() *logrus.Logger {
 		Out:          file,
 		Formatter:    &logrus.JSONFormatter{},
 		ReportCaller: true,
-		Level:        logrus.DebugLevel,
+		Level:        logrus.ErrorLevel,
 	}
 	return logger
 }

@@ -26,6 +26,7 @@ func (repo *Repository) GetCategories() ([]models.Category, error) {
 func (repo *Repository) GetCategoriesById(id string) (models.Category, error) {
 	var category models.Category
 	if err := repo.DB.First(&category, "category_id=?", id).Error; err != nil {
+		repo.Logger.Error(err)
 		return category, err
 	}
 	return category, nil
