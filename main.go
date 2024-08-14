@@ -21,6 +21,7 @@ import (
 
 func main() {
 	service.RedisInit()
+	defer service.RedisConnectionClose()
 	db := config.InitDB()
 	app := fiber.New()
 	logger := logger.Logging()

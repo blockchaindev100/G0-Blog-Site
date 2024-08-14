@@ -40,3 +40,10 @@ func GetData(key string) (string, error) {
 	}
 	return value, nil
 }
+
+func RedisConnectionClose() {
+	err := Client.Close()
+	if err != nil {
+		logger.Logging().Error(err)
+	}
+}

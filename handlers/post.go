@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"errors"
-
 	"github.com/blockchaindev100/Go-Blog-Site/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,7 +18,7 @@ func (h *Handlers) GetPosts(c *fiber.Ctx) error {
 	posts, err := h.Repo.GetPosts()
 	if err != nil {
 		h.Logger.Error(err)
-		return errors.New("fetching failed")
+		return fiber.ErrInternalServerError
 	}
 	for i := 0; i < len(posts); i++ {
 		str := posts[i].Post_id.String()
@@ -59,15 +57,15 @@ func (h *Handlers) CreatePost(c *fiber.Ctx) error {
 	id := c.Get("user_id")
 	if err := c.BodyParser(&post); err != nil {
 		h.Logger.Error(err)
-		return errors.New("parsing failed")
+		return fiber.ErrBadRequest
 	}
 	if err := h.Validator.Struct(post); err != nil {
 		h.Logger.Error(err)
-		return errors.New("invalid payload")
+		return fiber.ErrBadRequest
 	}
 	if err := h.Repo.CreatePosts(&post, id); err != nil {
 		h.Logger.Error(err)
-		return errors.New("post creation failed")
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(fiber.Map{
 		"message": "post created successfully",
@@ -90,15 +88,15 @@ func (h *Handlers) UpdatePost(c *fiber.Ctx) error {
 	var post models.Post
 	if err := c.BodyParser(&post); err != nil {
 		h.Logger.Error(err)
-		return errors.New("parsing failed")
+		return fiber.ErrBadRequest
 	}
 	if err := h.Validator.Struct(post); err != nil {
 		h.Logger.Error(err)
-		return errors.New("invalid payload")
+		return fiber.ErrBadRequest
 	}
 	if err := h.Repo.UpdatePost(&post, id); err != nil {
 		h.Logger.Error(err)
-		return err
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(fiber.Map{
 		"message": "updated successful",
@@ -119,7 +117,7 @@ func (h *Handlers) DeletePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.Repo.DeletePost(id); err != nil {
 		h.Logger.Error(err)
-		return errors.New("post deletion failed")
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(fiber.Map{
 		"message": "post deleted successful",

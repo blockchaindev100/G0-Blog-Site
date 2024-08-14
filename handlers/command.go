@@ -24,15 +24,15 @@ func (h *Handlers) AddCommand(c *fiber.Ctx) error {
 	user_id := c.Get("user_id")
 	if err := c.BodyParser(&command); err != nil {
 		h.Logger.Error(err)
-		return errors.New("parsing failed")
+		return fiber.ErrBadRequest
 	}
 	if err := h.Validator.Struct(command); err != nil {
 		h.Logger.Error(err)
-		return errors.New("invalid payload")
+		return fiber.ErrBadRequest
 	}
 	if err := h.Repo.AddCommand(&command, post_id, user_id); err != nil {
 		h.Logger.Error(err)
-		return err
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(fiber.Map{
 		"message": "command added successful",
@@ -56,12 +56,12 @@ func (h *Handlers) UpdateCommand(c *fiber.Ctx) error {
 	var command models.Command
 	if err := c.BodyParser(&command); err != nil {
 		h.Logger.Error(err)
-		return errors.New("parsing failed")
+		return fiber.ErrBadRequest
 	}
 	err := h.Repo.UpdateCommand(id, user_id, command)
 	if err != nil {
 		h.Logger.Error(err)
-		return errors.New("updation failed")
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(fiber.Map{
 		"message": "updated successful",
@@ -80,9 +80,19 @@ func (h *Handlers) UpdateCommand(c *fiber.Ctx) error {
 // @Router /command [delete]
 func (h *Handlers) DeleteCommand(c *fiber.Ctx) error {
 	id := c.Params("id")
+	user_id := c.Get("user_id")
+	command, err := h.Repo.GetCommandById(id)
+	if err != nil {
+		h.Logger.Error(err)
+		return fiber.ErrInternalServerError
+	}
+	if user_id != command.User_id.String() {
+		h.Logger.Error(errors.New("unauthorized"))
+		return fiber.ErrUnauthorized
+	}
 	if err := h.Repo.DeleteCommand(id); err != nil {
 		h.Logger.Error(err)
-		return errors.New("command deletion failed")
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(fiber.Map{
 		"message": "command deleted successful",
@@ -104,7 +114,7 @@ func (h *Handlers) GetCommandsByPostId(c *fiber.Ctx) error {
 	commands, err := h.Repo.GetCommandsByPostId(id)
 	if err != nil {
 		h.Logger.Error(err)
-		return errors.New("fetching failed")
+		return fiber.ErrInternalServerError
 	}
 	return c.JSON(commands)
 }

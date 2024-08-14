@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"time"
 
 	"github.com/blockchaindev100/Go-Blog-Site/models"
@@ -58,8 +59,11 @@ func (repo *Repository) UpdateCategory(category *models.Category, id string) err
 }
 
 func (repo *Repository) DeleteCategory(id string) error {
-	if err := repo.DB.Delete(&models.Category{}, "category_id=?", id).Error; err != nil {
-		repo.Logger.Error(err)
+	if result := repo.DB.Delete(&models.Category{}, "category_id=?", id); result.Error != nil {
+		repo.Logger.Error(result.Error)
+		return result.Error
+	} else if result.RowsAffected == 0 {
+		err := errors.New("no record deleted")
 		return err
 	}
 	return nil

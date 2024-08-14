@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"time"
 
 	"github.com/blockchaindev100/Go-Blog-Site/models"
@@ -15,7 +16,13 @@ type User interface {
 
 func (repo *Repository) GetUserById(id string) (models.User, error) {
 	var user models.User
-	if err := repo.DB.First(&user, "user_id=?", id).Error; err != nil {
+	result := repo.DB.First(&user, "user_id=?", id)
+	if err := result.Error; err != nil {
+		repo.Logger.Error(err)
+		return user, err
+	}
+	if result.RowsAffected == 0 {
+		err := errors.New("no data found")
 		repo.Logger.Error(err)
 		return user, err
 	}
@@ -31,7 +38,8 @@ func (repo *Repository) CreateUser(user *models.User) error {
 	}
 	user.Password = hashedPassword
 	user.Created_at = time.Now()
-	if err := repo.DB.Create(user).Error; err != nil {
+	result := repo.DB.Create(user)
+	if err := result.Error; err != nil {
 		repo.Logger.Error(err)
 		return err
 	}
@@ -40,7 +48,13 @@ func (repo *Repository) CreateUser(user *models.User) error {
 
 func (repo *Repository) GetUserByEmail(email string) (models.User, error) {
 	var user models.User
-	if err := repo.DB.Where("email=?", email).First(&user).Error; err != nil {
+	result := repo.DB.Where("email=?", email).First(&user)
+	if err := result.Error; err != nil {
+		repo.Logger.Error(err)
+		return user, err
+	}
+	if result.RowsAffected == 0 {
+		err := errors.New("no data found")
 		repo.Logger.Error(err)
 		return user, err
 	}

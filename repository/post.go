@@ -19,7 +19,13 @@ type Post interface {
 
 func (repo *Repository) GetPosts() ([]models.Post, error) {
 	var posts []models.Post
-	if err := repo.DB.Find(&posts).Error; err != nil {
+	result := repo.DB.Find(&posts)
+	if err := result.Error; err != nil {
+		repo.Logger.Error(err)
+		return nil, err
+	}
+	if result.RowsAffected == 0 {
+		err := errors.New("no data found")
 		repo.Logger.Error(err)
 		return nil, err
 	}
@@ -34,7 +40,8 @@ func (repo *Repository) CreatePosts(post *models.Post, id string) error {
 	}
 	post.User_id = parsed_user_id
 	post.Created_at = time.Now()
-	if err := repo.DB.Create(post).Error; err != nil {
+	result := repo.DB.Create(post)
+	if err := result.Error; err != nil {
 		repo.Logger.Error(err)
 		return err
 	}
@@ -58,7 +65,13 @@ func (repo *Repository) UpdatePost(post *models.Post, id string) error {
 }
 
 func (repo *Repository) DeletePost(id string) error {
-	if err := repo.DB.Delete(&models.Post{}, "post_id=?", id).Error; err != nil {
+	result := repo.DB.Delete(&models.Post{}, "post_id=?", id)
+	if err := result.Error; err != nil {
+		repo.Logger.Error(err)
+		return err
+	}
+	if result.RowsAffected == 0 {
+		err := errors.New("no data deleted")
 		repo.Logger.Error(err)
 		return err
 	}
