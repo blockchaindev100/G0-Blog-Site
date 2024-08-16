@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	logger "github.com/blockchaindev100/Go-Blog-Site/logger"
@@ -14,9 +15,9 @@ var Client *redis.Client
 
 func RedisInit() {
 	Client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Replace with your Redis server address
-		Password: "",               // No password for local development
-		DB:       0,                // Default DB
+		Addr:     os.Getenv("REDIS_ADDRESS"), // Replace with your Redis server address
+		Password: "",                         // No password for local development
+		DB:       0,                          // Default DB
 	})
 	ctx := context.Background()
 	// Ping the Redis server to check the connection
