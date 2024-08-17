@@ -63,7 +63,7 @@ func (h *Handlers) AddCategory(c *fiber.Ctx) error {
 // @Param user body models.Category true "Category details"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /category [put]
+// @Router /category/{id} [put]
 func (h *Handlers) UpdateCategory(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var category models.Category
@@ -93,7 +93,7 @@ func (h *Handlers) UpdateCategory(c *fiber.Ctx) error {
 // @Param id path string true "Category ID"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /category [Delete]
+// @Router /category/{id} [Delete]
 func (h *Handlers) DeleteCategory(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.Repo.DeleteCategory(id); err != nil {

@@ -82,7 +82,7 @@ func (h *Handlers) CreatePost(c *fiber.Ctx) error {
 // @Param user body models.Post true "Blog details"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /blog [put]
+// @Router /blog/{id} [put]
 func (h *Handlers) UpdatePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var post models.Post
@@ -112,7 +112,7 @@ func (h *Handlers) UpdatePost(c *fiber.Ctx) error {
 // @Param id path string true "Post ID"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /blog [Delete]
+// @Router /blog/{id} [Delete]
 func (h *Handlers) DeletePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if err := h.Repo.DeletePost(id); err != nil {

@@ -17,7 +17,7 @@ import (
 // @Param user body models.Command true "Command details"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /command [post]
+// @Router /command/{id} [post]
 func (h *Handlers) AddCommand(c *fiber.Ctx) error {
 	var command models.Command
 	post_id := c.Params("id")
@@ -49,7 +49,7 @@ func (h *Handlers) AddCommand(c *fiber.Ctx) error {
 // @Param user body models.Command true "Command details"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /command [put]
+// @Router /command/{id} [put]
 func (h *Handlers) UpdateCommand(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user_id := c.Get("user_id")
@@ -77,7 +77,7 @@ func (h *Handlers) UpdateCommand(c *fiber.Ctx) error {
 // @Param id path string true "Command ID"
 // @Security ApiKeyAuth
 // @Success 200 {object} models.Response
-// @Router /command [delete]
+// @Router /command/{id} [delete]
 func (h *Handlers) DeleteCommand(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user_id := c.Get("user_id")
@@ -108,7 +108,7 @@ func (h *Handlers) DeleteCommand(c *fiber.Ctx) error {
 // @Param id path string true "Post ID"
 // @Security ApiKeyAuth
 // @Success 200 {object} []models.Command
-// @Router /command [get]
+// @Router /command/{id} [get]
 func (h *Handlers) GetCommandsByPostId(c *fiber.Ctx) error {
 	id := c.Params("id")
 	commands, err := h.Repo.GetCommandsByPostId(id)
